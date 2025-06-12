@@ -6,8 +6,7 @@ import json
 import time
 import logging
 
-from run import config
-
+from src.base.config import CONFIG
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +37,7 @@ class PaymentLink:
 
     def create_quickpay_link(self, amount: float, label: str, targets: str, payment_type="AC"):
         params = {
-            "receiver": config.yoomoney_receiver,
+            "receiver": CONFIG.yoomoney_receiver,
             "quickpay-form": "shop",
             "targets": targets,
             "paymentType": payment_type,
@@ -52,7 +51,7 @@ class PaymentLink:
 
     async def check_payment_handler(self, label: str, user_id: int):
         logger.info(f"Checking payment for user {user_id} with label: {label}")
-        payment_successful = await self.check_yoomoney_payment(config.yoomoney_access_token, label)
+        payment_successful = await self.check_yoomoney_payment(CONFIG.yoomoney_access_token, label)
         if payment_successful == 1:
             logger.info(f"Payment SUCCESSFUL for user {user_id}, label: {label}")
             return 1
@@ -73,8 +72,8 @@ class PaymentLink:
 
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.post(config.yoomoney_scopes, headers=headers, data=data) as response:
-                    logger.debug(f"YooMoney API request: URL={config.yoomoney_scopes}, Headers={headers}, Data={data}")
+                async with session.post(CONFIG.yoomoney_scopes, headers=headers, data=data) as response:
+                    logger.debug(f"YooMoney API request: URL={CONFIG.yoomoney_scopes}, Headers={headers}, Data={data}")
                     logger.debug(f"YooMoney API response status: {response.status}")
 
                     if response.status == 200:
