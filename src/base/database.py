@@ -29,9 +29,9 @@ class Database:
 
 class ProjectDatabase(Database):
 
-	async def get_key(self, servise_name: str, key: str):
-		data = await self.execute_get_query("SELECT * FROM api_key WHERE client = $1",
-		                                    (servise_name,))
+	async def get_key(self,key: str):
+		data = await self.execute_get_query("SELECT * FROM api_key WHERE api_key = $1",
+		                                    (key,))
 		if data:
 			return True
 		else:
